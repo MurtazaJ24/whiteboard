@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from "react";
-import { emitCanvasImage, emitCanvasClear } from "../socket/connection";
-import { useStore } from "../store/store";
+import {
+  emitCanvasImage,
+  emitCanvasClear,
+  emitCanvasUndo,
+} from "../socket/connection";
+import { useCanvasStore } from "../store/store";
+import useDebounce from "./useDebounce";
 
 export const useCanvas = (
   onDraw: ({ ctx, currentPoint, prevPoint }: Draw) => void
 ) => {
   const [mouseDown, setMouseDown] = useState(false);
-  const canvasImage = useStore((state) => state.canvasImage);
+  const canvasImage = useCanvasStore((state) => state.canvasImage);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prevPoint = useRef<null | Point>(null);
@@ -22,7 +27,16 @@ export const useCanvas = (
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     emitCanvasClear();
+  };
 
+  const undo = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    emitCanvasUndo();
   };
 
   const download = () => {
@@ -33,14 +47,15 @@ export const useCanvas = (
     link.download = "whiteboard.png";
     link.href = canvas.toDataURL();
     link.click();
-  
-  }
+  };
+
+  const debouncedEmitCanvasImage = useDebounce(emitCanvasImage, 500);
 
   useEffect(() => {
     if (!canvasRef.current) return;
-    if (canvasImage === undefined){
-        return clear();
-    } 
+    if (canvasImage === 0) {
+      return clear();
+    }
     const image = new Image();
     image.src = canvasImage;
 
@@ -49,10 +64,10 @@ export const useCanvas = (
 
     // Draw the image onto the canvas
     image.onload = () => {
+      ctx?.clearRect(0, 0, canvas.width, canvas.height);
       ctx?.drawImage(image, 0, 0);
     };
   }, [canvasImage]);
-
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -63,7 +78,7 @@ export const useCanvas = (
       if (!ctx || !currentPoint) return;
 
       onDraw({ ctx, currentPoint, prevPoint: prevPoint.current });
-      emitCanvasImage(canvasRef.current?.toDataURL());
+      debouncedEmitCanvasImage(canvasRef.current?.toDataURL());
       prevPoint.current = currentPoint;
     };
 
@@ -94,5 +109,5 @@ export const useCanvas = (
     };
   }, [onDraw]);
 
-  return { canvasRef, onMouseDown, clear, download };
+  return { canvasRef, onMouseDown, clear, download, undo };
 };

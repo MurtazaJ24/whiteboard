@@ -4,26 +4,30 @@ import Whiteboard from "./Whiteboard";
 import { useEffect } from "react";
 import { joinRoom, leaveRoom } from "./socket/connection";
 import useLocalStorage from "./hooks/useLocalStorage";
+import Nav from "./Nav";
+import { useUserStore } from "./store/store";
 
 const RoomPage = () => {
   const { roomId } = useParams();
   const [user] = useLocalStorage("user", {});
+  const showUsersSidebar = useUserStore((state) => state.showUsersSidebar);
 
   useEffect(() => {
     if (!roomId || !user) return;
-    console.log(`Room ID: ${roomId}`);
-    joinRoom(roomId, user)
+    joinRoom(roomId, user);
 
     return () => {
-      console.log(`Leaving room ${roomId}`);
-      leaveRoom()
+      leaveRoom();
     };
   }, []);
 
   return (
-    <div className="flex flex-row">
-      <Members />
-      <Whiteboard />
+    <div className="h-screen flex flex-col">
+      <Nav />
+      <div className="flex-1 flex flex-row">
+        <Whiteboard />
+        {showUsersSidebar && <Members />}
+      </div>
     </div>
   );
 };

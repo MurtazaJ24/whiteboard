@@ -1,12 +1,12 @@
 import { Socket, io } from "socket.io-client";
-import { useStore } from "../store/store";
+import { useCanvasStore, useUserStore } from "../store/store";
 
 let socket: Socket;
 
 export const connectWithSocketServer = () => {
-  const draw = useStore.getState().draw;
-  const clear = useStore.getState().clear;
-  const setMembers = useStore.getState().setUsers;
+  const draw = useCanvasStore.getState().draw;
+  const clear = useCanvasStore.getState().clear;
+  const setMembers = useUserStore.getState().setUsers;
 
 
   socket = io("http://localhost:5000");
@@ -16,7 +16,6 @@ export const connectWithSocketServer = () => {
   });
 
   socket.on("user-connected", (users) => {
-    console.log("here")
     setMembers(users);
   })
 
@@ -44,6 +43,10 @@ export const emitCanvasImage = (canvasImage: string | undefined) => {
 
 export const emitCanvasClear = () => {
   socket.emit("canvas-clear");
+};
+
+export const emitCanvasUndo = () => {
+  socket.emit("canvas-undo");
 };
 
 export const joinRoom = (roomCode: string, user: User) => {

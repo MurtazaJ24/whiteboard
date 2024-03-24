@@ -14,7 +14,6 @@ function useLocalStorage(key: string, initialValue: any) {
 
   // Update local storage whenever storedValue changes
   useEffect(() => {
-    console.log(storedValue)
     try {
       window.localStorage.setItem(key, JSON.stringify(storedValue));
     } catch (error) {

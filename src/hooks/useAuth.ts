@@ -18,7 +18,6 @@ const useAuth = () => {
     });
 
     client.init({ onLoad: "login-required" }).then((authenticated) => {
-      console.log(client);
       setIsLoggedIn(authenticated);
       setUser({
         
