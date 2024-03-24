@@ -1,30 +1,32 @@
-# React + TypeScript + Vite
+# Whiteboard Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a collaborative whiteboard application where users can create or join sessions to draw together in real-time. The application provides various features for drawing, collaborating, and saving the whiteboard content.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Create or Join Sessions:** Users can create a new whiteboard session or join an existing one.
+- **Drawing Tools:** The whiteboard supports drawing using different colors and brush sizes.
+- **Undo:** Users can undo the last action on the whiteboard.
+- **Real-Time Collaboration:** Users can see the cursors of other connected users moving in real-time, indicating their drawing actions.
+- **Save as Image:** There's an option to save the whiteboard content as an image file.
+- **Authentication:** Authentication (user signup and login) is implemented to ensure only authorized users can access the whiteboard.
+- **Responsive Design:** The application is responsive and works on both desktop and mobile devices.
 
-## Expanding the ESLint configuration
+## Screenshots
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### Join Room Page
+![Home Page](screenshots/join-room-page.png)
 
-- Configure the top-level `parserOptions` property like this:
+### Whiteboard Page
+![Whiteboard Page](screenshots/room-whiteboard.png)
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+### Login Page
+![Login Page](screenshots/sign-in-page.png)
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Technologies Used
+
+- React.js
+- Node.js
+- Socket.IO
+- Keycloak
+- HTML5 Canvas API
